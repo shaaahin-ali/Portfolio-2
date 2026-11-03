@@ -4,6 +4,8 @@ import React, { useRef, useState, useEffect, useCallback } from "react";
 import {
   ChevronLeft,
   ChevronRight,
+  ChevronDown,
+  ChevronUp,
   ExternalLink,
   Github,
   Clock,
@@ -47,6 +49,62 @@ interface ShowcaseProject {
 
 const PROJECTS: ShowcaseProject[] = [
   {
+    id: "cinerag",
+    title: "CinePhile",
+    tagline: "AI-Powered RAG Platform for Mollywood Screenplays",
+    role: "Solo Developer",
+    duration: "Ongoing",
+    status: "Ongoing",
+    accent: "#F5A623",
+    featured: true,
+    technologies: [
+      "Next.js 14",
+      "TypeScript",
+      "FastAPI",
+      "Python 3.11+",
+      "Supabase",
+      "Pinecone",
+      "Claude Sonnet 4",
+      "OpenAI Embeddings",
+      "Cohere Reranking",
+      "PyMuPDF",
+      "Indic-NLP",
+      "SSE Streaming",
+      "Vercel",
+      "Render",
+    ],
+    overview:
+      "An AI-powered RAG (Retrieval-Augmented Generation) platform designed specifically for Mollywood film crews. Users upload screenplays and query them in natural language — Malayalam or English — receiving real-time streaming answers with precise scene citations, cultural intelligence, and role-based insights tailored for directors, actors, and producers.",
+    challenge:
+      "Mollywood pre-production crews waste hours manually sifting through 100+ page screenplays to extract emotional arcs, find scenes, and derive role-specific insights — with no native Malayalam-language AI tools available.",
+    problemSolving: [
+      "Built a scene-aware PDF chunking pipeline using PyMuPDF that preserves screenplay structure (scene headers, character cues, dialogue blocks) rather than splitting on arbitrary page boundaries",
+      "Solved bilingual query handling with langdetect + Indic-NLP Malayalam query expansion, enabling semantic retrieval for both English and Malayalam prompts against the same Pinecone vector index",
+      "Implemented zero-latency UX using Server-Sent Events (SSE) to stream Claude Sonnet 4's response tokens in real time — eliminating the 'waiting for AI' experience",
+      "Built a role-aware prompt system that dynamically tailors AI responses based on the user's production role (Director, Actor, Cinematographer, Producer, Editor, Music Director)",
+      "Achieved hallucination-free responses by grounding every answer with exact Scene Number, Page Number, and Character citations from the uploaded screenplay",
+    ],
+    highlights: [
+      "Bilingual RAG pipeline — queries in English or Malayalam (കേരളം)",
+      "Real-time streaming responses via SSE (Claude Sonnet 4)",
+      "Scene-aware PDF chunking with PyMuPDF",
+      "3072-dimensional Pinecone vector search + Cohere reranking",
+      "AI Video Generation from screenplay scenes (Vertex AI Veo 3.1)",
+      "Character relationship graph visualization",
+      "Multi-role access: Director, Actor, Cinematographer, Producer, Editor, Music Director",
+      "Query history, bookmarks & project workspace dashboard",
+    ],
+    images: [
+      { src: "/projects/cinerag/landing.png", caption: "Landing Page" },
+      { src: "/projects/cinerag/dashboard.png", caption: "Project Dashboard" },
+      { src: "/projects/cinerag/query-history.png", caption: "Role Selection & Query History" },
+      { src: "/projects/cinerag/character-graph.png", caption: "Character Relationship Graph" },
+      { src: "/projects/cinerag/video-gen.png", caption: "AI Scene Video Generation" },
+    ],
+    github: "https://github.com/shaaahin-ali",
+    live: "", // ← paste your demo/live URL here when ready
+  },
+  {
     id: "seekright",
     title: "SeekRight",
     tagline: "AI-Powered Lecture Intelligence",
@@ -55,7 +113,7 @@ const PROJECTS: ShowcaseProject[] = [
     duration: "Ongoing",
     status: "Ongoing",
     accent: "#C3E41D",
-    featured: true,
+    featured: false,
     technologies: [
       "FastAPI",
       "Python",
@@ -510,6 +568,7 @@ interface ShowcaseProps {
 function ProjectShowcase({ project, isDark, index }: ShowcaseProps) {
   const { ref, visible } = useInView(0.06);
   const { containerRef, glow, handleMove, handleLeave } = useMouseGlow();
+  const [showMore, setShowMore] = useState(false);
   const flip = index % 2 !== 0;
   const a = project.accent;
 
@@ -698,136 +757,137 @@ function ProjectShowcase({ project, isDark, index }: ShowcaseProps) {
               ))}
             </div>
 
-            {/* The Challenge — problem statement box */}
-            <div
-              className="rounded-xl p-4"
-              style={{
-                backgroundColor: isDark ? `${a}06` : `${a}08`,
-                border: `1px solid ${isDark ? `${a}15` : `${a}20`}`,
-                opacity: visible ? 1 : 0,
-                transform: visible ? "translateY(0)" : "translateY(12px)",
-                transition: "all 0.7s ease 440ms",
+            {/* ── Show more / Show less toggle ── */}
+            <button
+              onClick={() => setShowMore((p) => !p)}
+              className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.22em] px-4 py-2 rounded-full transition-all duration-300 hover:gap-2.5 hover:shadow-lg active:scale-[0.97] select-none"
+              style={{ 
+                backgroundColor: isDark ? `${a}12` : `${a}15`,
+                color: a,
+                border: `1px solid ${isDark ? `${a}30` : `${a}40`}`,
               }}
             >
-              <div className="flex items-center gap-2 mb-2">
-                <Lightbulb className="w-3.5 h-3.5" style={{ color: a }} />
-                <h4
-                  className="text-[10px] uppercase tracking-[0.3em] font-bold"
-                  style={{ color: a }}
-                >
-                  The Challenge
-                </h4>
-              </div>
-              <p
-                className="text-[13px] leading-[1.7] italic"
-                style={{
-                  fontFamily: "'Antic', sans-serif",
-                  color: isDark ? "hsl(0 0% 55%)" : "hsl(0 0% 40%)",
-                }}
-              >
-                {project.challenge}
-              </p>
-            </div>
+              {showMore ? (
+                <><ChevronUp className="w-3.5 h-3.5" /> Show less</>
+              ) : (
+                <><ChevronDown className="w-3.5 h-3.5" /> Show more</>  
+              )}
+            </button>
 
-            {/* Overview */}
-            <p
-              className="text-[15px] leading-[1.75]"
-              style={{
-                fontFamily: "'Antic', sans-serif",
-                color: isDark ? "hsl(0 0% 60%)" : "hsl(0 0% 38%)",
-                opacity: visible ? 1 : 0,
-                transform: visible ? "translateY(0)" : "translateY(12px)",
-                transition: "all 0.7s ease 450ms",
-              }}
-            >
-              {project.overview}
-            </p>
-
-            {/* How I Solved It — problem-solving section */}
+            {/* ── Collapsible details ── */}
             <div
+              className="overflow-hidden"
               style={{
-                opacity: visible ? 1 : 0,
-                transition: "opacity 0.5s ease 480ms",
+                maxHeight: showMore ? "2000px" : "0px",
+                opacity: showMore ? 1 : 0,
+                transition: showMore
+                  ? "max-height 0.6s cubic-bezier(0.16,1,0.3,1), opacity 0.4s ease 0.1s"
+                  : "max-height 0.45s cubic-bezier(0.7,0,0.84,0), opacity 0.25s ease",
               }}
             >
-              <div className="flex items-center gap-2 mb-3">
-                <Zap className="w-3.5 h-3.5" style={{ color: a }} />
-                <h4
-                  className="text-[10px] uppercase tracking-[0.3em] font-bold"
-                  style={{ color: a }}
+              <div className="space-y-5 pt-1">
+                {/* The Challenge */}
+                <div
+                  className="rounded-xl p-4"
+                  style={{
+                    backgroundColor: isDark ? `${a}06` : `${a}08`,
+                    border: `1px solid ${isDark ? `${a}15` : `${a}20`}`,
+                  }}
                 >
-                  How I Solved It
-                </h4>
-              </div>
-              <ul className="space-y-2">
-                {project.problemSolving.map((ps, psi) => (
-                  <li
-                    key={psi}
-                    className="flex items-start gap-2.5 text-[13px]"
+                  <div className="flex items-center gap-2 mb-2">
+                    <Lightbulb className="w-3.5 h-3.5" style={{ color: a }} />
+                    <h4
+                      className="text-[10px] uppercase tracking-[0.3em] font-bold"
+                      style={{ color: a }}
+                    >
+                      The Challenge
+                    </h4>
+                  </div>
+                  <p
+                    className="text-[13px] leading-[1.7] italic"
                     style={{
-                      opacity: visible ? 1 : 0,
-                      transform: visible ? "translateX(0)" : "translateX(-10px)",
-                      transition: `all 0.45s ease ${520 + psi * 70}ms`,
+                      fontFamily: "'Antic', sans-serif",
+                      color: isDark ? "hsl(0 0% 55%)" : "hsl(0 0% 40%)",
                     }}
                   >
-                    <span
-                      className="mt-[6px] w-1.5 h-1.5 rounded-sm flex-shrink-0 rotate-45"
-                      style={{ backgroundColor: a }}
-                    />
-                    <span
-                      style={{
-                        color: isDark ? "hsl(0 0% 58%)" : "hsl(0 0% 40%)",
-                        lineHeight: 1.65,
-                      }}
-                    >
-                      {ps}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </div>
+                    {project.challenge}
+                  </p>
+                </div>
 
-            {/* Highlights */}
-            <div
-              style={{
-                opacity: visible ? 1 : 0,
-                transition: "opacity 0.5s ease 600ms",
-              }}
-            >
-              <h4
-                className="text-[10px] uppercase tracking-[0.3em] font-bold mb-3"
-                style={{ color: isDark ? "hsl(0 0% 38%)" : "hsl(0 0% 55%)" }}
-              >
-                Key Highlights
-              </h4>
-              <ul className="space-y-1.5">
-                {project.highlights.map((h, hi) => (
-                  <li
-                    key={hi}
-                    className="flex items-start gap-2.5 text-sm"
-                    style={{
-                      opacity: visible ? 1 : 0,
-                      transform: visible ? "translateX(0)" : "translateX(-10px)",
-                      transition: `all 0.45s ease ${650 + hi * 70}ms`,
-                    }}
+                {/* Overview */}
+                <p
+                  className="text-[15px] leading-[1.75]"
+                  style={{
+                    fontFamily: "'Antic', sans-serif",
+                    color: isDark ? "hsl(0 0% 60%)" : "hsl(0 0% 38%)",
+                  }}
+                >
+                  {project.overview}
+                </p>
+
+                {/* How I Solved It */}
+                <div>
+                  <div className="flex items-center gap-2 mb-3">
+                    <Zap className="w-3.5 h-3.5" style={{ color: a }} />
+                    <h4
+                      className="text-[10px] uppercase tracking-[0.3em] font-bold"
+                      style={{ color: a }}
+                    >
+                      How I Solved It
+                    </h4>
+                  </div>
+                  <ul className="space-y-2">
+                    {project.problemSolving.map((ps, psi) => (
+                      <li
+                        key={psi}
+                        className="flex items-start gap-2.5 text-[13px]"
+                      >
+                        <span
+                          className="mt-[6px] w-1.5 h-1.5 rounded-sm flex-shrink-0 rotate-45"
+                          style={{ backgroundColor: a }}
+                        />
+                        <span
+                          style={{
+                            color: isDark ? "hsl(0 0% 58%)" : "hsl(0 0% 40%)",
+                            lineHeight: 1.65,
+                          }}
+                        >
+                          {ps}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* Highlights */}
+                <div>
+                  <h4
+                    className="text-[10px] uppercase tracking-[0.3em] font-bold mb-3"
+                    style={{ color: isDark ? "hsl(0 0% 38%)" : "hsl(0 0% 55%)" }}
                   >
-                    <span
-                      className="mt-[7px] w-1 h-1 rounded-full flex-shrink-0"
-                      style={{ backgroundColor: a }}
-                    />
-                    <span
-                      style={{
-                        color: isDark ? "hsl(0 0% 56%)" : "hsl(0 0% 42%)",
-                      }}
-                    >
-                      {h}
-                    </span>
-                  </li>
-                ))}
-              </ul>
+                    Key Highlights
+                  </h4>
+                  <ul className="space-y-1.5">
+                    {project.highlights.map((h, hi) => (
+                      <li
+                        key={hi}
+                        className="flex items-start gap-2.5 text-sm"
+                      >
+                        <span
+                          className="mt-[7px] w-1 h-1 rounded-full flex-shrink-0"
+                          style={{ backgroundColor: a }}
+                        />
+                        <span style={{ color: isDark ? "hsl(0 0% 56%)" : "hsl(0 0% 42%)" }}>
+                          {h}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
             </div>
 
-            {/* Tech stack */}
+            {/* Tech stack — always visible */}
             <div
               style={{
                 opacity: visible ? 1 : 0,

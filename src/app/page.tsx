@@ -1,65 +1,38 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
-import LoadingScreen from "@/components/ui/loading-screen";
-import CustomCursor from "@/components/ui/custom-cursor";
-import PortfolioHero from "@/components/ui/portfolio-hero";
-import Marquee from "@/components/ui/marquee";
-import AboutSection from "@/components/ui/about-section";
-import StatsBar from "@/components/ui/stats-bar";
-import SkillsSection from "@/components/ui/skills-section";
-import ProjectGallerySection from "@/components/ui/project-gallery-section";
-import ExperienceSection from "@/components/ui/experience-section";
-import EducationSection from "@/components/ui/education-section";
-import ContactSection from "@/components/ui/contact-section";
-
+import { useCallback, useState } from "react";
+import About from "@/components/site/about";
+import Contact from "@/components/site/contact";
+import Cursor from "@/components/site/cursor";
+import Header from "@/components/site/header";
+import Hero from "@/components/site/hero";
+import Journey from "@/components/site/journey";
+import Preloader from "@/components/site/preloader";
+import Showcase from "@/components/site/showcase";
+import SmoothScroll from "@/components/site/smooth-scroll";
+import Toolbox from "@/components/site/toolbox";
+import Work from "@/components/site/work";
 
 export default function Home() {
-  const [isDark, setIsDark] = useState(true);
-
-  useEffect(() => {
-    document.documentElement.classList.add("dark");
-  }, []);
-
-  const toggleTheme = useCallback(() => {
-    setIsDark((prev) => {
-      const newTheme = !prev;
-      if (newTheme) {
-        document.documentElement.classList.add("dark");
-      } else {
-        document.documentElement.classList.remove("dark");
-      }
-      return newTheme;
-    });
-  }, []);
-
-  const handleNavigate = useCallback((section: string) => {
-    const el = document.getElementById(section);
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth" });
-    }
-  }, []);
+  const [ready, setReady] = useState(false);
+  const onDone = useCallback(() => setReady(true), []);
 
   return (
-    <div
-      className="transition-colors duration-500 grain-overlay"
-      style={{
-        backgroundColor: isDark ? "hsl(0 0% 0%)" : "hsl(0 0% 98%)",
-      }}
-    >
-      <LoadingScreen />
-      <CustomCursor isDark={isDark} />
-
-      <PortfolioHero isDark={isDark} toggleTheme={toggleTheme} onNavigate={handleNavigate} />
-      <Marquee isDark={isDark} />
-      <AboutSection isDark={isDark} />
-      <StatsBar isDark={isDark} />
-      <SkillsSection isDark={isDark} />
-      <ProjectGallerySection isDark={isDark} />
-      <ExperienceSection isDark={isDark} />
-      <EducationSection isDark={isDark} />
-      <ContactSection isDark={isDark} />
-
-    </div>
+    <SmoothScroll>
+      <div className="grain">
+        <Preloader onDone={onDone} />
+        <Cursor />
+        <Header />
+        <main>
+          <Hero ready={ready} />
+          <Showcase />
+          <Work />
+          <About />
+          <Toolbox />
+          <Journey />
+        </main>
+        <Contact />
+      </div>
+    </SmoothScroll>
   );
 }

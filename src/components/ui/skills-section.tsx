@@ -129,16 +129,22 @@ export default function SkillsSection({ isDark }: SkillsSectionProps) {
     { icon: <Globe className="w-8 h-8" />, name: "React" },
     { icon: <Layout className="w-8 h-8" />, name: "JavaScript" },
     { icon: <Server className="w-8 h-8" />, name: "Next.js" },
-    { icon: <Database className="w-8 h-8" />, name: "SQL / SQLite" },
+    { icon: <Globe className="w-8 h-8" />, name: "TypeScript" },
     { icon: <Layout className="w-8 h-8" />, name: "HTML / CSS" },
-    { icon: <GitBranch className="w-8 h-8" />, name: "Git" },
     { icon: <Brain className="w-8 h-8" />, name: "FastAPI" },
     { icon: <Database className="w-8 h-8" />, name: "PostgreSQL" },
+    { icon: <Database className="w-8 h-8" />, name: "MySQL" },
+    { icon: <Database className="w-8 h-8" />, name: "SQL / SQLite" },
+    { icon: <Database className="w-8 h-8" />, name: "Pinecone" },
     { icon: <Server className="w-8 h-8" />, name: "Docker" },
+    { icon: <GitBranch className="w-8 h-8" />, name: "Git" },
     { icon: <Brain className="w-8 h-8" />, name: "Machine Learning" },
-    { icon: <Globe className="w-8 h-8" />, name: "TypeScript" },
     { icon: <Database className="w-8 h-8" />, name: "DSA" },
+    { icon: <Code2 className="w-8 h-8" />, name: "OOP" },
+    { icon: <Server className="w-8 h-8" />, name: "REST API" },
+    { icon: <Terminal className="w-8 h-8" />, name: "Postman" },
   ];
+
 
   const softSkills = [
     { icon: <MessageSquare className="w-8 h-8" />, name: "Communication" },
